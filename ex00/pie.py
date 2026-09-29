@@ -33,12 +33,17 @@ def main(refresh: bool):
                 cur.execute(sql0)     #  Check existence
                 exists = cur.fetchone()[0]
                 if not exists:
+                    print("Creating view")
                     cur.execute(sql1) #  View creation
+                    print("Retriving data")
                     cur.execute(sql2) #  Retrieve data
                 elif refresh:
+                    print("Refreshing view")
                     cur.execute(sql3) #  Refresh view
+                    print("Retriving data")
                     cur.execute(sql2) #  Retrieve data
                 else:
+                    print("Retriving data")
                     cur.execute(sql2) #  Retrieve data
 
                 # retrieve data from query into DataFrame
@@ -49,7 +54,7 @@ def main(refresh: bool):
 
                 plt.figure(figsize=(7, 7))
                 plt.pie(df["customers"], labels=df["event_type"], autopct="%1.1f%%", startangle=90)
-                plt.title("Distribución de event_type")
+                plt.title("Event type's distribution")
                 plt.axis("equal")
                 plt.savefig("pie.png")
                 plt.show()
@@ -59,6 +64,7 @@ def main(refresh: bool):
                 print(f"Error creating pie chart from evet_types: {e}")
             finally:
                 cur.close()
+                conn.commit()
                 conn.close()
 
 
