@@ -53,7 +53,7 @@ sql1_0 = psycopg.sql.SQL("""
     CREATE MATERIALIZED VIEW IF NOT EXISTS purch_cust_on_time AS
     SELECT event_time::date as day, count(*) AS num_customers
     FROM customers        
-    WHERE event_type = 'purchase'
+    WHERE event_type = 'purchase' AND event_time < '2023-02-01 00:00:00+01'
     GROUP BY 1
     ORDER BY 1;
     """)
@@ -74,7 +74,7 @@ sql1_1 = psycopg.sql.SQL("""
     CREATE MATERIALIZED VIEW IF NOT EXISTS sales_cust_on_time AS
     SELECT DATE_TRUNC('month', event_time) as month, sum(price) AS month_sales
     FROM customers
-    WHERE event_type = 'purchase'
+    WHERE event_type = 'purchase' AND event_time < '2023-02-01 00:00:00+01'
     GROUP BY DATE_TRUNC('month', event_time)
     ORDER BY 1;
     """)
@@ -107,7 +107,7 @@ sql1_2 = psycopg.sql.SQL("""
                         user_id AS customer,
                         sum(price) AS cust_day_purchase
                     FROM customers 
-                    WHERE event_type = 'purchase'
+                    WHERE event_type = 'purchase' AND event_time < '2023-02-01 00:00:00+01'
                     GROUP BY 1, 2
                 )
             GROUP BY 1

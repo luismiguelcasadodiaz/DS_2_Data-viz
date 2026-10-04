@@ -17,7 +17,8 @@ def main(refresh: bool):
         CREATE MATERIALIZED VIEW IF NOT EXISTS event_type_counts AS
         SELECT event_type, count(*) AS customers
         FROM customers
-         GROUP BY 1;
+        WHERE event_time < '2023-02-01 00:00:00+01'
+        GROUP BY 1;
         """)
 
     sql2 = psycopg.sql.SQL("""
