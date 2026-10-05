@@ -33,7 +33,7 @@ DS2_ex04: ## Find optimal number of clusters
 	python ex04/elbow.py
 
 .PHONY: DS2_ex05
-DS2_ex05: ## Find optimal number of clusters
+DS2_ex05: ## Plot clusters
 	python ex05/Clustering.py
 # ###############################################################33
 
