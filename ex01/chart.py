@@ -169,5 +169,5 @@ if __name__ == "__main__":
     elif num_args == 2:
         main(True)
     else:
-        print("python ./pie.py")
+        print("python ./chart.py")
         sys.exit(1)
