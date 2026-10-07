@@ -130,3 +130,236 @@ GROUP BY q.q1, q.median, q.q3;
 (1 row)
 
 Time: 3791.853 ms (00:03.792)
+
+
+
+
+## box2
+
+### What is the average basket price?
+
+##### Each user_id has several user_sessions.
+
+```sql
+SELECT user_id, user_session, price 
+FROM customers 
+WHERE  event_type = 'purchase' 
+   AND event_time < '2023-02-01 00:00:00+01'
+   AND user_id = 10280338
+ORDER BY user_session;
+```
+
+
+```text
+ user_id  |             user_session             | price 
+----------+--------------------------------------+-------
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.43
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.27
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.43
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.43
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.43
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.43
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.10
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 5a8ef64a-9215-4c88-ad5f-b3bab4e03fb3 |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.27
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.43
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.43
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  0.79
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.43
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.43
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  0.79
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.59
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.43
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.43
+ 10280338 | 9728269f-2014-4d85-a95a-0dab99c4851e |  1.27
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  1.59
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  1.59
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  1.43
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  5.24
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  1.59
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  1.51
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  1.59
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  0.24
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  5.24
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |  5.24
+ 10280338 | bce6164d-93ef-4d65-ae2f-7ee15552eae7 |  4.56
+ 10280338 | bce6164d-93ef-4d65-ae2f-7ee15552eae7 |  4.97
+ 10280338 | bce6164d-93ef-4d65-ae2f-7ee15552eae7 |  4.86
+ 10280338 | bce6164d-93ef-4d65-ae2f-7ee15552eae7 |  5.08
+ 10280338 | bce6164d-93ef-4d65-ae2f-7ee15552eae7 |  4.86
+ 10280338 | bce6164d-93ef-4d65-ae2f-7ee15552eae7 |  5.24
+ 10280338 | c9cad2fe-9213-42c0-a68a-c329b62f394a | 18.10
+```
+
+##### Inside each user_session 
+
+Inside each user_session there are several Purchase records of products wiht price.
+The basket price is the sum of prices for a session.
+
+```sql
+SELECT user_id, user_session, SUM(price) AS basket_price
+FROM customers
+WHERE  event_type = 'purchase' 
+   AND event_time < '2023-02-01 00:00:00+01'
+   AND user_id = 10280338
+GROUP BY user_id, user_session;
+```
+
+```text
+ user_id  |             user_session             | basket_price 
+----------+--------------------------------------+--------------
+ 10280338 | bcc9bfa0-8a71-485d-b315-297b0038b4c2 |        25.26
+ 10280338 | bce6164d-93ef-4d65-ae2f-7ee15552eae7 |        29.57
+ 10280338 | c9cad2fe-9213-42c0-a68a-c329b62f394a |        18.10
+```
+##### Average the basket price 
+
+```sql
+SELECT user_id, AVG(basket_price) AS average_basket_price
+FROM (
+    SELECT user_id, user_session, SUM(price) AS basket_price
+    FROM customers
+    WHERE event_type = 'purchase' AND 
+        event_time < '2023-02-01 00:00:00+01' AND user_id = 10280338
+    GROUP BY user_id, user_session
+) AS baskets
+GROUP BY user_id;
+```
+
+```text
+ user_id  | average_basket_price 
+----------+----------------------
+ 10280338 |  24.3100000000000000
+(1 row)
+
+```
+
+##### Create the first temporal table
+
+The base table has the average basket price for each user id
+
+```sql
+CREATE TEMP TABLE base AS (
+            SELECT user_id, AVG(basket_price) AS average_basket_price
+            FROM (
+                SELECT user_id, user_session, SUM(price) AS basket_price
+                FROM customers
+                WHERE event_type = 'purchase' AND 
+                    event_time < '2023-02-01 00:00:00+01'
+                GROUP BY user_id, user_session
+            ) AS baskets
+            GROUP BY user_id);
+```
+
+
+```sql
+select * from base limit 5;
+```
+
+```text
+ user_id  | average_basket_price 
+----------+----------------------
+  9794320 |  12.6800000000000000
+ 10079204 |  25.8100000000000000
+ 10280338 |  35.5660000000000000
+ 12055855 |  16.5400000000000000
+ 12936739 |  29.8900000000000000
+
+```
+##### Create the second temporal table
+
+This table has only one row. 
+It was explained above how 
+
+```sql
+CREATE TEMP TABLE quartiles AS (
+SELECT
+    MIN(average_basket_price) AS min,
+    MAX(average_basket_price) AS max,
+    q.q1, q.median, q.q3,
+    MIN(average_basket_price) FILTER (
+        WHERE average_basket_price >= q.q1 - 1.5 * (q.q3 - q.q1)) AS whislo,
+    MAX(average_basket_price) FILTER (
+        WHERE average_basket_price <= q.q3 + 1.5 * (q.q3 - q.q1)) AS whishi
+FROM base                                                                  
+CROSS JOIN (
+    SELECT
+        percentile_cont(0.25) WITHIN GROUP (ORDER BY average_basket_price) AS q1,
+        percentile_cont(0.50) WITHIN GROUP (ORDER BY average_basket_price) AS median,
+        percentile_cont(0.75) WITHIN GROUP (ORDER BY average_basket_price) AS q3
+    FROM base                                                                   
+) q          
+GROUP BY q.q1, q.median, q.q3);
+```
+
+
+```sql
+select * from quartiles;
+```
+
+```text
+          min           |          max          |  q1   |       median       |  q3   |         whislo         |       whishi        
+------------------------+-----------------------+-------+--------------------+-------+------------------------+---------------------
+ 0.13000000000000000000 | 1738.1000000000000000 | 15.22 | 27.655833333333334 | 47.46 | 0.13000000000000000000 | 95.8200000000000000
+(1 row)
+```
+
+
+### Outlieres
+
+```SQL
+SELECT DISTINCT b.average_basket_price 
+FROM base b CROSS JOIN quartiles q 
+WHERE ( (b.average_basket_price < q.q1 - 1.5 * (q.q3 - q.q1) OR
+            q.q3 + 1.5 * (q.q3 - q.q1) < b.average_basket_price) );
+```

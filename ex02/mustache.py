@@ -105,21 +105,22 @@ def box1(refresh: bool):
                     "whislo": stats["whislo"], "whishi": stats["whishi"],
                     "fliers": fliers,
                 }
-                plt.style.use("seaborn-v0_8-darkgrid")   # grey background + white grid
+                # plt.style.use("seaborn-v0_8-darkgrid")   # grey background + white grid
                 fig, ax = plt.subplots()
                 ax.bxp([box],
                         orientation="horizontal",
                         widths=0.8,                           # wide box like seaborn
                         patch_artist=True,                    # allows filling the box
-                        boxprops=dict(facecolor="green", edgecolor="dimgray"),
-                        medianprops=dict(color="dimgray"),
-                        whiskerprops=dict(color="dimgray"),
-                        capprops=dict(color="dimgray"),
-                        flierprops=dict(marker="D", markersize=4,
-                        markerfacecolor="dimgray", markeredgecolor="dimgray"),
+                        # boxprops=dict(facecolor="green", edgecolor="dimgray"),
+                        # medianprops=dict(color="dimgray"),
+                        # whiskerprops=dict(color="dimgray"),
+                        # capprops=dict(color="dimgray"),
+                        # flierprops=dict(marker="D", markersize=4,
+                        # markerfacecolor="dimgray", markeredgecolor="dimgray"),
                         )
                 ax.set_yticks([])                         # remove the "price" label on the left
                 ax.set_xlabel("price")
+                ax.set_xlim(0, 12)
                 plt.savefig("box1.png")
                 plt.show()
 
@@ -149,7 +150,7 @@ def box2(refresh: bool):
             FROM (
                 SELECT user_id, user_session, SUM(price) AS basket_price
                 FROM customers
-                WHERE event_type = 'purchase' AND 
+                WHERE event_type = 'purchase' AND price > 0 AND
                     event_time < '2023-02-01 00:00:00+01'
                 GROUP BY user_id, user_session
             ) AS baskets
@@ -231,7 +232,7 @@ def box2(refresh: bool):
                         orientation="horizontal",
                         widths=0.8,                           # wide box like seaborn
                         patch_artist=True,                    # allows filling the box
-                        boxprops=dict(facecolor="green", edgecolor="dimgray"),
+                        boxprops=dict(facecolor="#7AADD1", edgecolor="dimgray"),
                         medianprops=dict(color="dimgray"),
                         whiskerprops=dict(color="dimgray"),
                         capprops=dict(color="dimgray"),
@@ -239,6 +240,7 @@ def box2(refresh: bool):
                         markerfacecolor="dimgray", markeredgecolor="dimgray")
                         )
                 ax.set_yticks([])                         # remove the "price" label on the left
+                ax.set_xlim(0, 100)
                 ax.set_xlabel("Average basket price")
                 plt.savefig("box2.png")
                 plt.show()
