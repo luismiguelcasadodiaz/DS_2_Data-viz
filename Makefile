@@ -9,7 +9,7 @@ help: ## Show this help menu
 # ###############################################################33
 .PHONY: DS2_load
 DS2_load: ## removes Februay data from previous modules
-	psql -U luicasad -d piscineds -h localhost -c "DROP TABLE IF EXISTS data_2022_oct; DROP TABLE IF EXISTS data_2022_nov; DROP TABLE IF EXISTS data_2022_dec; DROP TABLE IF EXISTS data_2023_jan; DROP TABLE IF EXISTS items;"
+	psql -U luicasad -d piscineds -h localhost -f DS2_load.sql
 
 
 .PHONY: DS2_ex00

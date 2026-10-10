@@ -1,7 +1,11 @@
 import psycopg
 import sys
 import pandas as pd
+from pathlib import Path
 import matplotlib.pyplot as plt
+
+
+carpeta_script = Path(__file__).resolve().parent
 
 
 def main(refresh: bool):
@@ -57,7 +61,7 @@ def main(refresh: bool):
                 plt.pie(df["customers"], labels=df["event_type"], autopct="%1.1f%%", startangle=90)
                 plt.title("Event type's distribution")
                 plt.axis("equal")
-                plt.savefig("pie.png")
+                plt.savefig(carpeta_script / "pie.png")
                 plt.show()
 
             except Exception as e:

@@ -4,6 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import traceback
+from pathlib import Path
+
+
+carpeta_script = Path(__file__).resolve().parent
 
 def purch_cust_on_time(df: pd.DataFrame)-> None:
     print(df)
@@ -14,7 +18,7 @@ def purch_cust_on_time(df: pd.DataFrame)-> None:
     ax.xaxis.set_major_locator(mdates.MonthLocator(bymonthday=1))
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
     ax.set_ylabel("Number of customers")
-    fig.savefig("purch_cust_on_time.png")
+    fig.savefig(carpeta_script / "purch_cust_on_time.png")
     plt.show()
 
 def sales_cust_on_time(df: pd.DataFrame)-> None:
@@ -27,7 +31,7 @@ def sales_cust_on_time(df: pd.DataFrame)-> None:
     #ax.xaxis.set_major_locator(mdates.MonthLocator(bymonthday=1))
     #ax.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
     ax.set_ylabel("Total sales in million of \u20b3")
-    fig.savefig("sales_cust_on_time.png")
+    fig.savefig(carpeta_script / "sales_cust_on_time.png")
     plt.show()    
 def avera_cust_on_time(df: pd.DataFrame)-> None:
     print(df)
@@ -39,7 +43,7 @@ def avera_cust_on_time(df: pd.DataFrame)-> None:
     ax.xaxis.set_major_locator(mdates.MonthLocator(bymonthday=1))
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
     ax.set_ylabel("Average spend/customers in \u20b3")
-    fig.savefig("avera_cust_on_time.png")
+    fig.savefig(carpeta_script / "avera_cust_on_time.png")
     plt.show()
 
 sql0_0 = psycopg.sql.SQL("""
@@ -164,6 +168,7 @@ def main(refresh: bool):
 
 if __name__ == "__main__":
     num_args = len(sys.argv)
+    carpeta_script = Path(__file__).resolve().parent
     if num_args == 1:
         main(False)
     elif num_args == 2:

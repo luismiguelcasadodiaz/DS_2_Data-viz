@@ -1,8 +1,10 @@
 import psycopg
 import sys
 import pandas as pd
+from pathlib import Path
 import matplotlib.pyplot as plt
 
+carpeta_script = Path(__file__).resolve().parent
 
 def subject_print(stats: pd.DataFrame) -> None:
     print(f"{'count':<6}{stats['count'].item():>16.6f}")
@@ -121,7 +123,7 @@ def box1(refresh: bool):
                 ax.set_yticks([])                         # remove the "price" label on the left
                 ax.set_xlabel("price")
                 ax.set_xlim(0, 12)
-                plt.savefig("box1.png")
+                plt.savefig(carpeta_script / "box1.png")
                 plt.show()
 
             except Exception as e:
@@ -242,7 +244,7 @@ def box2(refresh: bool):
                 ax.set_yticks([])                         # remove the "price" label on the left
                 ax.set_xlim(0, 100)
                 ax.set_xlabel("Average basket price")
-                plt.savefig("box2.png")
+                plt.savefig( carpeta_script / "box2.png")
                 plt.show()
 
             except Exception as e:

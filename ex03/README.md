@@ -127,3 +127,16 @@ CROSS JOIN params p
 GROUP BY 1, 2
 ORDER BY 1;
 ```
+
+### Pareto
+
+perc = 80%
+
+```python
+s = (df["num_users"].cumsum() > perc * df["num_users"].sum()).idxmax()
+```
+
+This sentence creates an array o values False True.
+`cumsum()` transforms the serie into an accumulated sum.
+The first is false. It is not bigger than 80% of total.
+`idxmax()` returns the position of the maximal value. it is the True. it is the first True. 
