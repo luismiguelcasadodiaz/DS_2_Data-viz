@@ -126,7 +126,72 @@ def box1(bucket_size: int = 10) -> None:
                 
             except Exception as e:
                 conn.rollback()
-                print(f"Error creating boxplot from prices: {e}")
+                print(f"Error creating histogram for customers by days between purchases: {e}")
+            finally:
+                cur.close()
+                conn.commit()
+                conn.close()
+
+
+def box11(bucket_size: int = 10) -> None:
+
+    sql0 = psycopg.sql.SQL("""
+        WITH base as (
+                SELECT 
+                    user_id, 
+                    COUNT(DISTINCT user_session) AS sessions 
+                FROM purchased_before_feb
+                GROUP BY 1
+                ), 
+            param AS (
+                SELECT {}::numeric as bucket_size
+                ) 
+        SELECT 
+            FLOOR(b.sessions / p.bucket_size) * p.bucket_size AS bin_start, 
+            FLOOR(b.sessions / p.bucket_size) * p.bucket_size + p.bucket_size AS bin_end,
+            count(*) AS num_users
+        FROM base AS b 
+        CROSS JOIN param AS p 
+        GROUP BY bin_start, bin_end 
+        ORDER BY bin_start;
+        """).format(psycopg.sql.Literal(bucket_size))
+    
+    with psycopg.connect(
+        host="127.0.0.1", port=5432, dbname="piscineds", user="luicasad"
+    ) as conn:
+        with conn.cursor() as cur:
+            try:
+                cur.execute(sql0)     #  calculate frequency
+
+                # retrieve data from query into DataFrame
+                rows = cur.fetchall()
+                columns = [desc.name for desc in cur.description]
+
+                df = pd.DataFrame(rows, columns=columns)
+
+                plt.style.use("seaborn-v0_8-darkgrid")   # grey background + white grid
+                fig, ax = plt.subplots(figsize=(10, 6))
+                bars = ax.bar(df["bin_start"], df["num_users"], width=bucket_size * 0.90,
+                        align="edge", edgecolor="black")
+                ax.set_xlabel("Frequency/num of tickets")
+                max_buc_shown = int(df["bin_end"].max()) * 0.5
+                ax.set_xlim(0, int( max_buc_shown) )
+                #ax.set_xticks(df["bin_end"].tolist())
+                ax.set_xticks(range(0, int(max_buc_shown) + 1, bucket_size)) # sql returns Decimal TYpe         
+                ax.set_ylabel("Customers")
+                ax.set_ylim(0, df["num_users"].max() * 1.05)
+                ax.bar_label(bars, labels=[f"{int(c):,}" if c > 0 else "" for c in df["num_users"]],
+             padding=3, fontsize=9)
+                ax.yaxis.set_visible(True)
+                ax.set_title(f"Distribution of number of tickets")
+                plt.savefig(carpeta_script /f"customers_by_orders_{bucket_size}.png")
+                plt.show()
+
+
+                
+            except Exception as e:
+                conn.rollback()
+                print(f"Error creating Histogram customers by orders: {e}")
             finally:
                 cur.close()
                 conn.commit()
@@ -191,6 +256,7 @@ def box2(bucket_size: int = 50) -> None:
 
 def main() -> None:
     box1()
+    box11()
     box2()
 
 if __name__ == "__main__":
