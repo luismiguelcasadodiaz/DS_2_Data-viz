@@ -68,6 +68,142 @@ Only 81 users in 92645 returned something. I will drop this records
 
 ### log_trasn
 
+K_means uses euclidean distance to the cluster's centroid. Two considerations
+
+The distinct features's scale matters. If one feature ranges from 0 to 300 and other feature ranges from 1 to 50, calculing the distante the former wheights more than the latter. Min-max normalization solves it.
+
+Let's explore noc feature for the 110518 users.
+
+```sql
+ SELECT noc, count(*) AS users FROM user_features_raw GROUP BY 1 ORDER BY 1;
+ ```
+
+```txt
+ noc | users
+-----+-------
+   1 | 18397
+   2 | 17323
+   3 | 15184
+   4 | 11569
+   5 |  8955
+   6 |  7031
+   7 |  5544
+   8 |  4396
+   9 |  3572
+  10 |  2905
+  11 |  2362
+  12 |  1917
+  13 |  1576
+  14 |  1301
+  15 |  1152
+  16 |   904
+  17 |   787
+  18 |   718
+  19 |   593
+  20 |   554
+  21 |   449
+  22 |   418
+  23 |   345
+  24 |   279
+  25 |   256
+  26 |   218
+  27 |   211
+  28 |   184
+  29 |   157
+  30 |   123
+  31 |   150
+  32 |   127
+  33 |   103
+  34 |    70
+  35 |    74
+  36 |    64
+  37 |    64
+  38 |    43
+  39 |    44
+  40 |    37
+  41 |    36
+  42 |    44
+  43 |    29
+  44 |    37
+  45 |    25
+  46 |    25
+  47 |    21
+  48 |    18
+  49 |    12
+  50 |    10
+  51 |     9
+  52 |     5
+  53 |     7
+  54 |     8
+  55 |     9
+  56 |     8
+  57 |     4
+  58 |     2
+  59 |     5
+  60 |     5
+  61 |     5
+  62 |     6
+  63 |     1
+  64 |     2
+  65 |     2
+  66 |     3
+  67 |     2
+  68 |     2
+  69 |     2
+  70 |     1
+  72 |     2
+  76 |     2
+  78 |     1
+  79 |     2
+  81 |     1
+  82 |     1
+  83 |     2
+  85 |     1
+  97 |     1
+ 118 |     1
+ 127 |     1
+ 128 |     1
+ 137 |     1
+
+ ```
+
+Noc's raw distribution
+
+|Percentil     | noc|
+|--------------|----|
+|25 %	       |   2|
+|50 % (mediana)|   4|
+|75 %	       |   7|
+|90 %	       |  13|
+|99 %	       |  31|
+|máximo	       | 137|
+
+the skewness, 3,21, is higher than the practical threshold. 99% of the users has 31 categories or less. 988 usera has 32 or more categories.
+
+let's compare both normalizations
+
+|noc|min-max directo|ln(1+x)|	ln(1+x) + min-max|
+|---|---------------|-------|--------------------|
+|  1|0.000	        |  0.693|0.000               |
+|  2|0.007	        |  1.099|0.096               |
+|  3|0.015	        |  1.386|0.164               |
+|  5|0.029	        |  1.792|0.259               |
+| 10|0.066	        |  2.398|0.403               |
+| 20|0.140	        |  3.045|0.555               |
+| 31|0.221          |  3.466|0.655               |
+| 37|0.265	        |  3.638|0.695               |
+|137|1.000	        |  4.927|1.000               |
+
+Ln(1 + x) Change the shape. Chagnes from range 1-137 to 0,693-4.927. Later min-max translates it to 0-1.
+
+Without Logaritm 99% of the users fit between 0 and 0,221, and 988 user fit in 78% of the space form 0,2 to 1. A customer buying 10 categorie is only at 0,066 distant form a customer buying only one category. They are almos the same. Percentill falls 
+
+With the logaritm a customer buyin 10 categories distances 0,403 form a customer buyin one category. Now 99% ot the users fit between 0 and 0,655, and 988 users fall into 35% of the rang 0-1 .skewnees reduce to 0,51.
+
+#### withou
+
+
+
 ##
 
 
@@ -81,7 +217,7 @@ Only 81 users in 92645 returned something. I will drop this records
   12055855 | 0.16929380759878143 |                   0 | 0.17053739033287585 |  0.1673783188403832 | 0.34548920502626364586 |  0.7489560951925591 | 0.37901644240918249306 | 0.27109444839595729128 | 0.0
   12936739 | 0.09903052904958949 |                   0 |  0.0754639974000092 | 0.07406608599518133 | 0.41679121548014639108 |  0.5038463368711258 | 0.45723779909903507346 | 0.47399782554734439591 | 0.0
   15400971 | 0.16929380759878143 |                   0 |  0.1290065556458325 |  0.1266168103149703 | 0.43853863002664934113 |  0.7847281309520517 | 0.48109564349213748313 | 0.43609493798028656728 | 0.0
-  15781728 | 0.09903052904958949 |                   0 |  0.0754639974000092 | 0.07406608599518133 | 0.37001787374530792649 |  0.8845503685370916 | 0.40592544164757789901 | 0.41002204440821914757 | 0.0
+  15781728 | 0.09903052904958949 |                   0 |  0.0754639974000092 | 0.07406608599518133 | 0.37001787374530792649 |  0|.8845503685370916 | 0.40592544164757789901 | 0.41002204440821914757 | 0.0
   19762782 |                   0 |                   0 | 0.27993455044585086 | 0.27474898230533296 | 0.53869479075014873175 |   0.905633126904476 | 0.59097123778139262403 | 0.40810549389941207570 | 0.0
   20554973 | 0.09903052904958949 |                   0 | 0.25801311129166493 | 0.25323362062994054 | 0.37858781829899650758 |  0.5323850333776357 | 0.41532703755601178213 | 0.23147104338733762722 | 0.0
   23633626 |  0.3059739964375307 |                   0 | 0.27993455044585086 | 0.27474898230533296 | 0.38034299503621291388 | 0.22201620940534117 | 0.41725254154589345770 | 0.21558128011418371778 | 0.0
@@ -198,3 +334,5 @@ WITH base AS (
             FROM denormalized
             ) SELECT user
 _id, (p.max_noc - d.noc) / (p.max_noc - p.min_noc) AS noc FROM denormalized d CROSS JOIN minmax p;
+
+
