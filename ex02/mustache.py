@@ -30,8 +30,7 @@ def box1(refresh: bool):
         WITH base AS (
             SELECT price
             FROM customers
-            WHERE event_time < '2023-02-01 00:00:00+01'
-            AND event_type = 'purchase'
+            WHERE event_type = 'purchase'
         ),
         q AS (
             SELECT
@@ -64,8 +63,7 @@ def box1(refresh: bool):
     sql4 = psycopg.sql.SQL("""
         SELECT DISTINCT c.price 
         FROM customers c CROSS JOIN purchase_price_stats s 
-        WHERE   c.event_time < '2023-02-01 00:00:00+01' AND 
-                c.event_type = 'purchase' AND 
+        WHERE   c.event_type = 'purchase' AND 
                 ( (c.price < s.q1 - 1.5 * (s.q3 - s.q1) OR
                    s.q3 + 1.5 * (s.q3 - s.q1) < c.price) );
         """)
@@ -152,8 +150,7 @@ def box2(refresh: bool):
             FROM (
                 SELECT user_id, user_session, SUM(price) AS basket_price
                 FROM customers
-                WHERE event_type = 'purchase' AND price > 0 AND
-                    event_time < '2023-02-01 00:00:00+01'
+                WHERE event_type = 'purchase' AND price > 0
                 GROUP BY user_id, user_session
             ) AS baskets
             GROUP BY user_id);

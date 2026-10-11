@@ -21,12 +21,14 @@ def subject_print(stats: pd.DataFrame) -> None:
 def box1(bucket_size: int = 10) -> None:
 
     sql0 = psycopg.sql.SQL("""
+
         WITH 
         summary AS (
             SELECT DISTINCT 
                 DATE(event_time) AS day, 
                 user_id  
-            FROM purchased_before_feb
+            FROM customers
+            WHERE event_type = 'purchase'            
             ), 
         gap AS (
             SELECT 
@@ -85,6 +87,9 @@ def box1(bucket_size: int = 10) -> None:
     ) as conn:
         with conn.cursor() as cur:
             try:
+                cur.execute("""SET work_mem = '512MB';
+                                SET max_parallel_workers_per_gather = 0;
+                                """)
                 cur.execute(sql0)     #  calculate frequency
 
                 # retrieve data from query into DataFrame
@@ -136,11 +141,13 @@ def box1(bucket_size: int = 10) -> None:
 def box11(bucket_size: int = 10) -> None:
 
     sql0 = psycopg.sql.SQL("""
+
         WITH base as (
                 SELECT 
                     user_id, 
                     COUNT(DISTINCT user_session) AS sessions 
-                FROM purchased_before_feb
+                FROM customers
+                WHERE event_type = 'purchase'
                 GROUP BY 1
                 ), 
             param AS (
@@ -161,6 +168,9 @@ def box11(bucket_size: int = 10) -> None:
     ) as conn:
         with conn.cursor() as cur:
             try:
+                cur.execute("""SET work_mem = '512MB';
+                                SET max_parallel_workers_per_gather = 0;
+                                """)                
                 cur.execute(sql0)     #  calculate frequency
 
                 # retrieve data from query into DataFrame
@@ -200,12 +210,14 @@ def box11(bucket_size: int = 10) -> None:
 def box2(bucket_size: int = 50) -> None:
 
     sql0 = psycopg.sql.SQL("""
+
         WITH params AS (
             SELECT {}::numeric AS bucket_size   -- default bucket size
         ),
         user_totals AS (
             SELECT user_id, SUM(price) AS total_spent
-            FROM purchased_before_feb
+            FROM customers
+            WHERE event_type = 'purchase'            
             GROUP BY user_id
         )
         SELECT
@@ -223,6 +235,9 @@ def box2(bucket_size: int = 50) -> None:
     ) as conn:
         with conn.cursor() as cur:
             try:
+                cur.execute("""SET work_mem = '512MB';
+                                SET max_parallel_workers_per_gather = 0;
+                                """)                
                 cur.execute(sql0)     # Calculate bucket count
 
                 # retrieve data from query into DataFrame

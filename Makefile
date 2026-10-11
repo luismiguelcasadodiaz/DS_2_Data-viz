@@ -2,15 +2,12 @@
 
 .DEFAULT_GOAL := help
 environment := DS2
+REFRESH ?=
 
 .PHONY: help
 help: ## Show this help menu
 	@awk 'BEGIN {FS = ":.*?## "} /^[0-9a-zA-Z_-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 # ###############################################################33
-.PHONY: DS2_load
-DS2_load: ## removes Februay data from previous modules
-	psql -U luicasad -d piscineds -h localhost -f DS2_load.sql
-
 
 .PHONY: DS2_ex00
 DS2_ex00: ## Pie chart to understand what people do on the site
@@ -18,7 +15,7 @@ DS2_ex00: ## Pie chart to understand what people do on the site
 
 .PHONY: DS2_ex01
 DS2_ex01: ## Customers by day, sales by month, Averaga customer expenidure by day
-	python ex01/chart.py
+	python ex01/chart.py $(REFRESH)
 
 .PHONY: DS2_ex02
 DS2_ex02: ## Basic statiscis for items purchased, average basket price per user
@@ -63,16 +60,19 @@ norminette: ## Run norminette on all .py files
 
 .PHONY: entrega
 entrega: ## copies deliverable files to 42 repo
-	mkdir ../../DS0/ex00
-	mkdir ../../DS0/ex02
-	mkdir ../../DS0/ex03
-	mkdir ../../DS0/ex04
-	cp ex00/VM-instructions.md ../../DS0/ex00/
-	cp ex02/table.py ../../DS0/ex02/
-	cp ex03/automatic_table.py ../../DS0/ex03/
-	cp ex04/items_table.py ../../DS0/ex04/
-	cp Makefile ../../DS0
-	cp requirements.txt ../../DS0
+	mkdir ../../DS2/ex00
+	mkdir ../../DS2/ex02
+	mkdir ../../DS2/ex03
+	mkdir ../../DS2/ex04
+	mkdir ../../DS2/ex05	
+	cp ex00/pie.py ../../DS2/ex00/
+	cp ex01/chart.py ../../DS2/ex01/
+	cp ex02/mustache.py ../../DS2/ex02/
+	cp ex03/Building.py ../../DS2/ex02/
+	cp ex04/elbow.py ../../DS2/ex04/
+	cp ex05/Clustering.py ../../DS2/ex04/	
+	cp Makefile ../../DS2
+	cp requirements.txt ../../DS2
 
 .PHONY: drop
 drop: ## Drops items and data_202*_*** tables

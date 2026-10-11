@@ -35,11 +35,12 @@ We treat each session as one order (ticket) and use 1 February as the reference 
 + event_time
     + (adbt) average days betweeen purchase days
     + (dlp) days from last purchase '2023-02-01' - MAX(event_time)::date
+    + (dfp) days from first purchase '2023-02-01 - MIN(event_time)::date
 + product_id
     + (ndp) number of distint product ==> COUNT(DISTINCT product_id)
     + (noi) number of itmes ==> COUNT(product_id)
 + category_id
-    + (noc) number od distinct categories ==> NULLIF(COUNT(DISTINCT user_session, 0)
+    + (noc) number od distinct categories ==> NULLIF(COUNT(DISTINCT category_id, 0)
 + user_sesion
     + (nos) number of sesions ==> COUNT(DISTINCT user_session)
 + price
@@ -55,7 +56,7 @@ All features are log-transformed and standardized before clustering, since they 
 How many negative (returns) or zero price (suspicious) sales has our dataset. 
 ```sql
 SELECT COUNT(*) AS n_rows, COUNT(DISTINCT user_id) AS n_users, MIN(price), MAX(price)
-FROM purchased_before_feb
+FROM customers
 WHERE price < 0;
 ```
 Only 81 users in 92645 returned something. I will drop this records
@@ -67,7 +68,7 @@ Only 81 users in 92645 returned something. I will drop this records
 
 ### log_trasn
 
-
+##
 
 
 ```txt
