@@ -200,6 +200,13 @@ Without Logaritm 99% of the users fit between 0 and 0,221, and 988 user fit in 7
 
 With the logaritm a customer buyin 10 categories distances 0,403 form a customer buyin one category. Now 99% ot the users fit between 0 and 0,655, and 988 users fall into 35% of the rang 0-1 .skewnees reduce to 0,51.
 
+|without LN()| with LN(noc + 1)|
+|-----------------------|------------------------|
+![alt text](noc_no_LN.png)|![alt text](noc_si_LN.png)|
+|![alt text](tvp_no_LN.png)|![alt text](tvp_si_LN.png)|
+|![alt text](dfp_no_LN.png)|![alt text](dfp_si_LN.png)|
+|![alt text](adbp_no_LN.png)|![alt text](adbp_si_LN.png)|
+
 #### withou
 
 
