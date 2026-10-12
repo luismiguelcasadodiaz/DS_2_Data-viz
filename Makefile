@@ -3,7 +3,8 @@
 .DEFAULT_GOAL := help
 environment := DS2
 REFRESH ?=
-
+FEAT1 = nos
+FEAT2 = dfp
 .PHONY: help
 help: ## Show this help menu
 	@awk 'BEGIN {FS = ":.*?## "} /^[0-9a-zA-Z_-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -31,7 +32,7 @@ DS2_ex04: ## Find optimal number of clusters
 
 .PHONY: DS2_ex05
 DS2_ex05: ## Plot clusters
-	python ex05/Clustering.py
+	python ex05/Clustering.py $(FEAT1) $(FEAT2)
 # ###############################################################33
 
 .PHONY: set
