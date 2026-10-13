@@ -113,11 +113,43 @@ def hbar(X: pd.Dataframe) -> None:
     plt.show()
     plt.close(fig) 
 
+def RFM(X: pd.DataFrame) -> None:
+    names = {0: "Inactivos", 1:"Nuevos", 2:"Loyal Gold", 3:"Loyal silver"}
+    axis = X.aggregate({"dlp":["min", "max"], "nos":["min", "max"]})
+    clusters = X.groupby("cluster").aggregate({"dlp": "mean","nos":"mean","tvp":"mean"})
+    clusters["name"] = clusters.index.map(names)
+    fig, ax = plt.subplots(figsize=(10, 5))
+    scatter = ax.scatter(
+        x=clusters["dlp"] / 30, 
+        y=clusters["nos"],
+        s=clusters["tvp"],
+        c=clusters.index,
+        cmap="viridis")
+    ax.set_xlim(axis.loc["min","dlp"] /30 , axis.loc["max","dlp"] /30 )
+    ax.set_ylim(axis.loc["min","nos"], axis.loc["max","nos"])
+    ax.set_xlabel("Median recency (month)")
+    ax.set_ylabel("Median frecuency")    
+    ax.spines[["top", "right"]].set_visible(False)
+    for x, y, etiqueta, M in zip(clusters["dlp"], clusters["nos"], clusters["name"], clusters["tvp"]):
+        ax.annotate(
+            f'Average "{etiqueta}": {M:.2f} \u20b3',
+            (x/30, y),
+            textcoords="offset points",
+            xytext=(0.7 * M/100, 0.5 * M/60),     # desplazamiento en puntos para no tapar el marcador
+            fontsize=8,
+        )
+    plt.tight_layout()
+    plt.savefig(carpeta_script /"RFM.png")
+    plt.show()
+    plt.close(fig)
+
+    
+
 def main(km_feat1: str, km_feat2: str )-> None:
     features_all =["noc", "nos", "ndp", "noi", "tvp", "dlp", "dfp", "atv", "aiv", "adbp"]
     assert km_feat1 in features_all, f"The feature {km_feat1} is not in the dataset"
     assert km_feat2 in features_all, f"The feature {km_feat2} is not in the dataset"
-    km_features =[km_feat1, km_feat2]   
+    km_features =[km_feat1, km_feat2]
     with psycopg.connect(
             host="127.0.0.1", port=5432, dbname="piscineds", user="luicasad"
         ) as conn:
@@ -160,6 +192,7 @@ def main(km_feat1: str, km_feat2: str )-> None:
                     #        if feat1 != feat2:
                     #            colored_cluster(raw, [feat1, feat2], km_features, centers)
                     hbar(X)
+                    RFM(X)
                     colored_cluster(X, km_features, km_features, centers)
                     #pca(X, centers)
 

@@ -62,6 +62,7 @@ norminette: ## Run norminette on all .py files
 .PHONY: entrega
 entrega: ## copies deliverable files to 42 repo
 	mkdir ../../DS2/ex00
+	mkdir ../../DS2/ex01	
 	mkdir ../../DS2/ex02
 	mkdir ../../DS2/ex03
 	mkdir ../../DS2/ex04
